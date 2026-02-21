@@ -61,12 +61,13 @@ class QualityRuleService(IQualityRuleService):
                rule_id: int,
                new_rule_data: dict) -> QualityRuleModel:
         try:
-            rule = self.quality_rule_repo.update(rule_id=rule_id,
-                                                new_rule_data=new_rule_data)
+            rule = self.quality_rule_repo.read(rule_id=rule_id)
             
             if not rule:
                 raise QualityRuleNotFound(f"Regra {rule_id} não encontrada.")
             
+            rule = self.quality_rule_repo.update(rule_id=rule_id,
+                                                new_rule_data=new_rule_data)
             return rule
         except UpdateIsNotActive:
             raise QualityRuleIsDeactivated(f"Regra {rule_id} está inativa. Certifique-se de ativar a regra antes de atualizá-la.")
@@ -76,9 +77,12 @@ class QualityRuleService(IQualityRuleService):
     def deactivate_by_id(self,
                         rule_id: int) -> QualityRuleModel:
         try:
-            rule = self.quality_rule_repo.delete(rule_id=rule_id)
+            rule = self.quality_rule_repo.read(rule_id=rule_id)
+            
             if not rule:
                 raise QualityRuleNotFound(f"Regra {rule_id} não encontrada.")
+
+            rule = self.quality_rule_repo.delete(rule_id=rule_id)
             
             return rule
         except DeleteIsNotActive:
@@ -88,9 +92,13 @@ class QualityRuleService(IQualityRuleService):
     
     def activate_by_id(self, rule_id: int) -> QualityRuleModel:
         try:
-            rule = self.quality_rule_repo.revert_delete(rule_id=rule_id)
+            rule = self.quality_rule_repo.read(rule_id=rule_id)
+            
             if not rule:
                 raise QualityRuleNotFound(f"Regra {rule_id} não encontrada.")
+
+            rule = self.quality_rule_repo.revert_delete(rule_id=rule_id)
+
             return rule
         except RevertDeleteIsActive:
             raise QualityRuleIsActivated(f"Regra {rule_id} já está ativada.")

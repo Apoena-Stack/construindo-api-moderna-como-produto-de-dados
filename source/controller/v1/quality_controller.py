@@ -48,6 +48,23 @@ class QualityController:
     def get_rules_by_table(target_table: str, is_active: bool = None, quality_rule_service: IQualityRuleService = Depends(Provide[ApplicationContainer.services.quality_rule_service])):
         return quality_rule_service.read_rule_by_target_table(target_table=target_table, is_active=is_active)
 
+    @router.put("/rule/{rule_id}", status_code = 201, response_model = QualityRuleObjectResponse)
+    @inject
+    async def update_quality_rule(rule_id: int, rule: QualityRuleSchema, quality_rule_service: IQualityRuleService = Depends(Provide[ApplicationContainer.services.quality_rule_service])):
+        try:
+            response = quality_rule_service.update_rule(rule_id=rule_id, new_rule_data=rule.dict())
+            return response
+        except QualityRuleNotFound as error:
+            return JSONResponse(
+                status_code = status.HTTP_404_NOT_FOUND,
+                content = str(error)
+            )
+        except QualityRuleIsDeactivated as error:
+            return JSONResponse(
+                status_code = status.HTTP_409_CONFLICT,
+                content = str(error)
+            )
+
     @router.patch("/rule/{rule_id}")
     @inject
     def activate_or_deactivate_rule(rule_id: int, is_active: bool, quality_rule_service: IQualityRuleService = Depends(Provide[ApplicationContainer.services.quality_rule_service])):
