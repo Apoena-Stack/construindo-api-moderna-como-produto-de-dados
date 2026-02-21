@@ -81,9 +81,3 @@ if __name__ == "__main__":
         regex_expr="iury"
     )
     print(quality_rule_schema)
-
-
-class QualityRuleUpdateSchema(QualityRuleSchema):
-    rule_type: Optional[RuleTypeEnum] = None
-    target_table: Optional[str] = None
-    target_column: Optional[str] = None

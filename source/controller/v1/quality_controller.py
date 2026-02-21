@@ -5,7 +5,12 @@ from dependency_injector.wiring import inject, Provide
 from source.service.interface.interface_quality_rule_service import IQualityRuleService
 from source.service.quality_rule_service import QualityRuleService
 from source.repository.sqlite_quality_rule_repository import SQLiteQualityRuleRepository
-from source.exceptions.quality_rule_exceptions import QualityRuleNotFound, QualityRuleExists
+from source.exceptions.quality_rule_exceptions import(
+    QualityRuleNotFound,
+    QualityRuleExists,
+    QualityRuleIsActivated,
+    QualityRuleIsDeactivated
+)
 from source.schema.quality_rule_schema import QualityRuleSchema
 from source.schema.response_schema import QualityRuleObjectResponse
 from source.config.containers import ApplicationContainer
@@ -42,3 +47,22 @@ class QualityController:
     @inject
     def get_rules_by_table(target_table: str, is_active: bool = None, quality_rule_service: IQualityRuleService = Depends(Provide[ApplicationContainer.services.quality_rule_service])):
         return quality_rule_service.read_rule_by_target_table(target_table=target_table, is_active=is_active)
+
+    @router.patch("/rule/{rule_id}")
+    @inject
+    def activate_or_deactivate_rule(rule_id: int, is_active: bool, quality_rule_service: IQualityRuleService = Depends(Provide[ApplicationContainer.services.quality_rule_service])):
+        try:
+            if is_active:
+                return quality_rule_service.activate_by_id(rule_id=rule_id)
+            else:
+                return quality_rule_service.deactivate_by_id(rule_id=rule_id)
+        except QualityRuleNotFound as error:
+            return JSONResponse(
+                status_code = status.HTTP_404_NOT_FOUND,
+                content = str(error)
+            )
+        except (QualityRuleIsActivated, QualityRuleIsDeactivated) as error:
+            return JSONResponse(
+                status_code = status.HTTP_409_CONFLICT,
+                content = str(error)
+            )
