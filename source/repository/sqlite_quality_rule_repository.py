@@ -5,8 +5,8 @@ from source.exceptions.repo_exceptions import RevertDeleteIsActive, DeleteIsNotA
 
 
 class SQLiteQualityRuleRepository(IQualityRuleRepository):
-    def __init__(self):
-        self.sqlite_client = SQLiteClient()
+    def __init__(self, sqlite_client: SQLiteClient):
+        self.sqlite_client = sqlite_client
 
     def create(self,
                rule_type: str,
