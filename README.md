@@ -2,6 +2,18 @@
 
 API REST para gerenciamento de regras de qualidade de dados, construída com FastAPI, SQLAlchemy e injeção de dependências via `dependency-injector`.
 
+## APRENDA A CONSTRUIR ESSE PROJETO DO ZERO!
+Esse projeto foi construído por meio do curso "API Moderna como Produto de Dados com Python" pela Apoena Stack, disponível neste [link](https://app.apoenastack.com/courses/api-moderna-como-produto-de-dados-com-python).
+
+![alt text](architecture.png)
+
+- Objetivo da Disciplina: Capacitar o aluno a projetar, desenvolver e publicar APIs profissionais utilizando Python e FastAPI. Ao final do curso, você será capaz de estruturar produtos de dados acessíveis, com código organizado em camadas, persistência em banco de dados e ambiente de execução isolado via Docker.
+
+Esse curso explora a seguinte metodologia:
+- Desenvolvimento Orientado a Produto: Aulas práticas que simulam a criação de serviços reais, focadas em transformar lógica de dados em endpoints operacionais do absoluto zero;
+- Engenharia de Software Aplicada: Construção de um projeto completo envolvendo arquitetura MVC, ORM e gestão de dependências, servindo como uma prova técnica robusta para seu portfólio;
+- Validação de Conhecimento: Testes de múltipla escolha desenhados para consolidar conceitos fundamentais de rotas, métodos HTTP e integração de sistemas.
+
 ## Visão geral
 
 A API permite criar, consultar, atualizar, ativar e desativar regras de qualidade associadas a tabelas e colunas de um banco de dados. Cada regra pertence a um dos quatro tipos suportados:
